@@ -10,7 +10,8 @@ let timerInterval = 0;
 let timerStarted = false;
 let buttonContainer = document.querySelectorAll("button");
 
-
+let currentQuestion;// both lines will cause console logging error here ive moved these variable all over the code and it errors on different lines
+let options = questionBoxes[questionIndex].options;
 
 for (i = 0; i < buttonContainer.length; i++) {
     buttonContainer[i].addEventListener("click", function() {
@@ -53,6 +54,7 @@ startButton.addEventListener("click", function(event){
        clearInterval(timerInterval);
        timerStarted = false;      
     }
+    
     startQuiz()
 
 // add high score "local storage" lesson 04-22
@@ -61,9 +63,9 @@ startButton.addEventListener("click", function(event){
 
 
 
- function startQuiz(){
-    let currentQuestion = questionBoxes[questionIndex];
-    let options = options = currentQuestion.options; //console logging error here ive moved these variable all over the code and it errors on different lines
+ function startQuiz(currentQuestion){
+    
+     
     console.log("start quiz")
     questionIndex = 0;    
     currentQuestion = questions[questionIndex];    
