@@ -2,14 +2,14 @@ let startButton = document.createElement("button");
 let questionElement = document.getElementById("questions");
 let timerElement = document.querySelector("#time-seconds");
 let questionIndex = 0;
-let time = 900;
+let time = 900; //change back to 30
 let score = 0;
 let scoreElement = document.querySelector("#score");
 let boxElement = document.querySelector("#coding-quiz");
 let timerInterval = 0;
 let timerStarted = false;
 let buttonContainer = document.querySelectorAll("#button");
-let userName = document.createElement("INPUT");
+let leaderboardElement = document.querySelector("#leaderboard");
 
 var questionBoxes = [
     {
@@ -52,24 +52,6 @@ var questionBoxes = [
 
 let options = questionBoxes[questionIndex].options;
 
-for (i = 0; i < buttonContainer.length; i++) {
-    buttonContainer[i].addEventListener("click", function() {
-        if (this.textContent === currentQuestion.correct) {
-            score++;
-        } else {
-         time -=5
-        }
-        if (questionIndex === questions.length - 1) {
-            endQuiz();
-        } else {
-            questionIndex++;
-            currentQuestion = questions[questionIndex];
-            options = currentQuestion.options;
-            showQuestion();
-        }
-    })
-}
-
 scoreElement.textContent = `score: ${score}`;
 timerElement.textContent = `time left: ${time}`;
 startButton.setAttribute("type", "button");
@@ -81,24 +63,41 @@ document.querySelector("#main-space").appendChild(startButton);
 startButton.addEventListener("click", function(){   
     if(!timerStarted){
         timerStarted = true;
-        time = 900;
+        time = 900; //change back to 30
         timerInterval = setInterval( function() {
             time--;
             timerElement.textContent = `time left: ${time}`;
-            checkTime()       
-        }, 1000)
+            checkTime();      
+        }, 1000);
     } else {
        clearInterval(timerInterval);
        timerStarted = false;      
     }    
-    startQuiz()
-})
+    startQuiz();
+});
 
  function startQuiz(currentQuestion){
     questionElement.classList.add("questionElement");
     questionIndex = 0;    
     currentQuestion = questions[questionIndex];    
     showQuestion();
+    for (i = 0; i < buttonContainer.length; i++) {
+        buttonContainer[i].addEventListener("click", function() {
+            if (this.textContent === currentQuestion.correct) {
+                score++;
+            } else {
+             time -=5
+            }
+            if (questionIndex === questions.length - 1) {
+                endQuiz(time);
+            } else {
+                questionIndex++;
+                currentQuestion = questions[questionIndex];
+                options = currentQuestion.options;
+                showQuestion();
+            }
+        })
+    }
 }
 
 startButton.addEventListener("click", startQuiz);
@@ -123,7 +122,7 @@ function showQuestion(){
             }
             questionIndex++;
             if (questionIndex >= questionBoxes.length) {
-                endQuiz();
+                endQuiz(time);
             } else {
                 currentQuestion = questionBoxes[questionIndex];
                 showQuestion();
@@ -135,61 +134,52 @@ function showQuestion(){
 };
 
 function checkTime() {
-    if (time === 0) {
-        endQuiz()
+    if (time <= 0) {
+        endQuiz(0);
     }
 };
 
 timerElement.classList.add("timer");
 scoreElement.classList.add("score");
 startButton.classList.add("startButton");
-//cant target option boxes or restart button to style
+
 //change timer back to 30 before final push
+function generateLeaderboard(userInfo) {
+    if (localStorage.getItem('leaderboard') === null) {
+       localStorage.setItem('leaderboard', JSON.stringify([userInfo]));
+    } else {    
+    let leaderboard = JSON.parse(localStorage.getItem("leaderboard"));
+    leaderboard.push(userInfo);
+    leaderboard.sort((a, b) => b.score - a.score);
+    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+    }
+    return localStorage;
+}
 
-var leaderboard = [
-    {
-        name: "",
-        highScore: "",        
-    },
+function displayLeaderboard(leaderboard) {    
+    var leaderboard = JSON.parse(localStorage.getItem("leaderboard"));
+    var leaderboardContent = document.createElement("div");
+    for (i = 0; i < 5 && i < leaderboard.length; i++) {
+        leaderboardContent.innerHTML += `</br><p>${leaderboard[i].firstName}: ${leaderboard[i].score}</p>`;
+    }    
+    leaderboardElement.appendChild(leaderboardContent);
+}
 
-    {
-        name: "",
-        highScore: "",        
-    },
-
-    {
-        name: "",
-        highScore: "",        
-    },
-
-    {
-        name: "",
-        highScore: "",        
-    },
-
-];
-
-let outLeaderboard = "";
-
-localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
-
-for (var i = 0; i < outLeaderboard.length; i++);
-
-function endQuiz() {
+function endQuiz(time) {
     clearInterval(timerInterval);
-    var gameOver = document.createElement("div");
-    gameOver.innerHTML = `
-        <h2>GAME OVER</h2>
-        <p>Your Score is ${score}</p><button onclick="location.reload()">Restart</button></p>`;
-    boxElement.appendChild(gameOver);
+    var gameOver = document.createElement("div");    
     questionElement.style.display = "none";
-    outLeaderboard = JSON.parse(localStorage.getItem("leaderboard"));
-    //textContent.document(outLeaderboard[i]`Please enter your ${userName}`); // error textcontent is not defined
-    //leaderboard.appendChild(outLeaderboard);
-    console.log(outLeaderboard);
+    var firstNameInput = prompt("Please enter your name");
+    
+    var userInfo = { 
+        firstName: firstNameInput,
+        score: score + time       
+      }
+    gameOver.innerHTML = `
+        <h2>GAME OVER</h2>;
+        <p>${userInfo.firstName}, your Score is ${userInfo.score}</p><button onclick="location.reload()">Restart</button></p>`;
+    boxElement.appendChild(gameOver);
+    displayLeaderboard(generateLeaderboard(userInfo));
 }
 
 boxElement.style.backgroundColor = "white";
-
-
-
