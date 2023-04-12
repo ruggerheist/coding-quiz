@@ -10,3 +10,8 @@ This is a quiz utilizing dynamic elements created in JavaScript. The questions a
 
 ![Alt text](/assets/Screenshot%202023-04-12%20003810.png)
 
+[Live Link to Quiz](https://ruggerheist.github.io/coding-quiz/)
+
+### Citations
+
+For this project, I utilized a friend to help me through some of the more complicated functions. I also utlized ChatGPT, an AI language model, to explain concepts I was unsure of how to implement. ChatGPT was also used to debug an error with a few variables and where they were being declared. Finally, AskBCS helped with a variable and function that even ChatGPT missed and was able to guide me to make the proper corrections.
