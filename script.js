@@ -2,7 +2,7 @@ let startButton = document.createElement("button");
 let questionElement = document.getElementById("questions");
 let timerElement = document.querySelector("#time-seconds");
 let questionIndex = 0;
-let time = 900; //change back to 30
+let time = 30;
 let score = 0;
 let scoreElement = document.querySelector("#score");
 let boxElement = document.querySelector("#coding-quiz");
@@ -15,8 +15,7 @@ var questionBoxes = [
     {
         question: "JavaScript variables can be defined with the following except: ",
         options: ["var", "def", "const", "let"],
-        correct: "def",
-        
+        correct: "def",        
     },
     
     { 
@@ -52,8 +51,8 @@ var questionBoxes = [
 
 let options = questionBoxes[questionIndex].options;
 
-scoreElement.textContent = `score: ${score}`;
-timerElement.textContent = `time left: ${time}`;
+scoreElement.textContent = `SCORE: ${score}`;
+timerElement.textContent = `TIME LEFT: ${time}`;
 startButton.setAttribute("type", "button");
 startButton.classList.add("btn");
 startButton.classList.add("btn-primary");
@@ -63,10 +62,10 @@ document.querySelector("#main-space").appendChild(startButton);
 startButton.addEventListener("click", function(){   
     if(!timerStarted){
         timerStarted = true;
-        time = 900; //change back to 30
+        time = 30;
         timerInterval = setInterval( function() {
             time--;
-            timerElement.textContent = `time left: ${time}`;
+            timerElement.textContent = `TIME LEFT: ${time}`;
             checkTime();      
         }, 1000);
     } else {
@@ -111,6 +110,7 @@ function showQuestion(){
     questionElement.appendChild(question);
     for (i = 0; i < currentQuestion.options.length; i++){
         var option = document.createElement("button");
+        option.classList.add("optionButtons");
         option.textContent = currentQuestion.options[i];
         questionElement.appendChild(option);
         option.addEventListener("click", function(){
@@ -127,8 +127,8 @@ function showQuestion(){
                 currentQuestion = questionBoxes[questionIndex];
                 showQuestion();
             }
-            scoreElement.textContent = `score: ${score}`;
-            timerElement.textContent = `time left: ${time}`;
+            scoreElement.textContent = `SCORE: ${score}`;
+            timerElement.textContent = `TIME LEFT: ${time}`;
         })
     }             
 };
@@ -141,17 +141,15 @@ function checkTime() {
 
 timerElement.classList.add("timer");
 scoreElement.classList.add("score");
-startButton.classList.add("startButton");
 
-//change timer back to 30 before final push
 function generateLeaderboard(userInfo) {
-    if (localStorage.getItem('leaderboard') === null) {
-       localStorage.setItem('leaderboard', JSON.stringify([userInfo]));
+    if (localStorage.getItem("leaderboard") === null) {
+       localStorage.setItem("leaderboard", JSON.stringify([userInfo]));
     } else {    
     let leaderboard = JSON.parse(localStorage.getItem("leaderboard"));
     leaderboard.push(userInfo);
     leaderboard.sort((a, b) => b.score - a.score);
-    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+    localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
     }
     return localStorage;
 }
@@ -159,6 +157,7 @@ function generateLeaderboard(userInfo) {
 function displayLeaderboard(leaderboard) {    
     var leaderboard = JSON.parse(localStorage.getItem("leaderboard"));
     var leaderboardContent = document.createElement("div");
+    leaderboardContent.classList.add("leaderboardContent");
     for (i = 0; i < 5 && i < leaderboard.length; i++) {
         leaderboardContent.innerHTML += `</br><p>${leaderboard[i].firstName}: ${leaderboard[i].score}</p>`;
     }    
@@ -168,16 +167,16 @@ function displayLeaderboard(leaderboard) {
 function endQuiz(time) {
     clearInterval(timerInterval);
     var gameOver = document.createElement("div");    
+    gameOver.classList.add("gameOver");
     questionElement.style.display = "none";
-    var firstNameInput = prompt("Please enter your name");
-    
+    var firstNameInput = prompt("Please enter your name");    
     var userInfo = { 
         firstName: firstNameInput,
         score: score + time       
       }
     gameOver.innerHTML = `
-        <h2>GAME OVER</h2>;
-        <p>${userInfo.firstName}, your Score is ${userInfo.score}</p><button onclick="location.reload()">Restart</button></p>`;
+        <h2 id="">GAME OVER</h2>
+        <p>${userInfo.firstName}, Your score is ${userInfo.score}</p><button onclick="location.reload()">Restart</button></p>`
     boxElement.appendChild(gameOver);
     displayLeaderboard(generateLeaderboard(userInfo));
 }

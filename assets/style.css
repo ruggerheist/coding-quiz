@@ -1,14 +1,18 @@
+main {
+    background-color: white;
+}
+
 body {
-   /*  display: flex; */
    font-family: monospace;
+   background-color: white;
 }
 
 #coding-quiz {
     display: flex;
     justify-content: center;
-    width: 100%;
-    height: auto;
-    font-size: 5vh;
+    width: auto;
+    height: 15%;
+    font-size: 4.5vh;
 }
 
 .questionElement {
@@ -22,23 +26,55 @@ body {
 }
 
 .timer {
-    font-size: xx-large;
+    font-size: 40px;
     font-weight: 900;
-    color: red;
+    color: rgb(199, 6, 6);
 }
 
 .score {
-    font-size: xx-large;
+    font-size: 40px;
     font-weight: 900;
-    color: rgb(27, 168, 2);
+    color: rgb(45, 183, 21);
+    display: flex;
+    justify-content: end;
 }
 
-.startButton {
+.btn {
     font-size: large;
     font-weight: bold;
+    width: 10%;
+    background-color: darkgrey;
+    height: auto;
+    margin-left: 45%;    
 }
 
 button {
     font-size: large;
     font-weight: bold;
+    width: 15%;
+    background-color: rgb(242, 151, 118);
 }
+
+.gameOver {
+    font-size: smaller;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: auto;
+    height: auto;
+}
+
+.leaderboardContent {
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    margin-left: 45%;
+    font-size: 25px;
+    font-weight: 600;
+    color: rgb(167, 246, 246);
+    border: solid 3px black;
+    margin-right: 30%;
+    background-color: rgb(214, 87, 40);
+}
+
+
